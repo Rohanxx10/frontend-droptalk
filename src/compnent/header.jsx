@@ -9,7 +9,7 @@ function Headers({ user }) {
   const navigate=useNavigate();
 
   const handleLogout = () => {
-    // clear token / user data
+   
     deleteAllData();
     window.location.reload();
   };

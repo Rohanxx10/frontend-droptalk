@@ -1,13 +1,13 @@
 import axios from "axios";
 
- export const url="https://senderbackend-35quh1uz.b4a.run"
-const api = axios.create({
+export const url = import.meta.env.VITE_APP_API_URL;
 
+const api = axios.create({
   baseURL: `${url}/api/v1`
 });
 
-export const fileApi= axios.create({
-  baseURL: `${url}/api/v1/api/files`
+export const fileApi = axios.create({
+  baseURL: `${url}/api/files` 
 });
 
 export default api;

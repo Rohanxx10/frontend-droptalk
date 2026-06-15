@@ -6,7 +6,7 @@ import { getToken } from "./UserService";
 
 export const createUser= (userData)=>{
 
-    return api.post("create-user",userData);
+    return api.post("/create-user",userData);
 }
 
 export const loginUser=(userData)=>{

@@ -28,6 +28,7 @@ const handleSubmit = async (e) => {
     const login = loginData.data;
 
     console.log("storing", login.firstName);
+    localStorage.clear();
 
     localStorage.setItem("firstName", login.firstName ?? "");
     localStorage.setItem("lastName", login.lastName ?? "");

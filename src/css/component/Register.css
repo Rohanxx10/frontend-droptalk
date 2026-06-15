@@ -174,3 +174,67 @@
 }
 
 
+/* ── Field group wrapper ── */
+.field-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ── Eye inside input ── */
+.input-eye-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.input-eye-wrap input {
+  width: 100%;
+  padding-right: 44px;   /* room for the eye */
+  box-sizing: border-box;
+}
+
+.eye-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  /* no background, no border, no color highlight */
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  line-height: 0;
+}
+
+.eye-toggle:focus {
+  outline: none;        /* remove focus ring so it never highlights */
+}
+
+.eye-toggle svg {
+  display: block;
+  pointer-events: none; /* clicks go to the span, not the svg */
+}
+
+/* ── Submit button fix ── */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: #6c63ff;   /* change to match your theme color */
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.submit-btn:hover {
+  background: #574fd6;
+}

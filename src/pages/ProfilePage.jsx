@@ -2,49 +2,82 @@ import { useEffect, useState } from "react";
 import "../css/component/userProfile.css";
 import { userProfile } from "../service/ApiService";
 import { FaUserCircle } from "react-icons/fa";
+import { deleteAllData } from "../service/UserService";
+
+// 👇 your B2 bucket base URL — change to your actual bucket URL
+const BACKEND_URL  = import.meta.env.VITE_APP_API_URL;
 
 function UserProfile() {
-  const [user, setUser] = useState({
-    name: "unknown",
-    email: "unknown",
-    lastName: "unknown",
-    firstName: "unknown",
-    photoUrl: "unknown",
-  });
+  const [user, setUser] = useState(null); // null = still loading
+  const [imgError, setImgError] = useState(false);
 
-useEffect(() => {
-  const fetchProfile = async () => {
-    try {
-      const username = localStorage.getItem("username");
-      if (!username) return;
 
-      const profile = await userProfile(username);
-
-      setUser({
-        username: profile.data.username,
-        email: profile.data.email,
-        lastName: profile.data.lastName,
-        firstName: profile.data.firstName,
-        photoUrl: profile.data.profilePicture,
-      });
-    } catch (e) {
-      console.error(e);
-    }
+  const handleLogout = () => {
+   
+    deleteAllData();
+    window.location.reload();
   };
+  
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const username = localStorage.getItem("username");
+        if (!username) return;
 
-  fetchProfile();
-}, []);
+        const profile = await userProfile(username);
+        console.log("API response:", profile.data); // debug
 
+        const rawPhoto = profile.data.profilePicture;
+
+        // Build full URL if backend only returns filename
+        const photoUrl = rawPhoto
+          ? `${BACKEND_URL}/files/download?fileName=${encodeURIComponent(rawPhoto)}`
+          : null;
+
+       setUser({
+  username: profile.data.username,
+  email: profile.data.email,
+  lastName: profile.data.lastName,
+  firstName: profile.data.firstName,
+  photoUrl: rawPhoto || null,   
+});
+      } catch (e) {
+        console.error("Profile fetch error:", e);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // loading state
+  if (!user) {
+    return (
+      <div className="profile-page">
+        <div className="profile-card">
+          <p style={{ textAlign: "center" }}>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-page">
       <div className="profile-card">
         {/* TOP SECTION */}
         <div className="profile-top">
-          {user.photoUrl === "unknown" ? (
-            <FaUserCircle />
+          {/* Avatar — fallback to icon if no URL or image fails to load */}
+          {user.photoUrl && !imgError ? (
+            <img
+              src={user.photoUrl}
+              alt="profile"
+              className="profile-avatar"
+              onError={() => {
+                console.error("Image failed to load:", user.photoUrl); // debug
+                setImgError(true); // 👈 fallback to icon if 403 or broken URL
+              }}
+            />
           ) : (
-            <img src={user.photoUrl} alt="profile" className="profile-avatar" />
+            <FaUserCircle className="profile-avatar-icon" />
           )}
 
           <div className="profile-basic">
@@ -62,17 +95,14 @@ useEffect(() => {
             <span>First Name</span>
             <p>{user.firstName}</p>
           </div>
-
           <div className="info-box">
             <span>Last Name</span>
             <p>{user.lastName}</p>
           </div>
-
           <div className="info-box">
             <span>Username</span>
             <p>{user.username}</p>
           </div>
-
           <div className="info-box">
             <span>Email</span>
             <p>{user.email}</p>
@@ -82,7 +112,7 @@ useEffect(() => {
         {/* ACTIONS */}
         <div className="profile-actions">
           <button className="edit-btn">Edit Profile</button>
-          <button className="logout-btn">Sign Out</button>
+          <button className="logout-btn" onClick={handleLogout}>Sign Out</button>
         </div>
       </div>
     </div>

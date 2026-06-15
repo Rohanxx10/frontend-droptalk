@@ -1,4 +1,4 @@
-
+import { Analytics } from '@vercel/analytics/react';
 import "./App.css";
 import Headers from "./compnent/header.jsx";
 import HeroSection from "./compnent/HeroSection.jsx";
@@ -47,7 +47,7 @@ function App() {
   return (
     <>
 
-
+      <Analytics/>
       <Headers user={user}/>
       <div id="hero">
         <HeroSection/>
